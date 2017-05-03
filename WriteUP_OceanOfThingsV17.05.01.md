@@ -443,17 +443,19 @@ visualize the data:
 
 ![](media/a56861993d7507ab11392902336ad7a6.png)
 
-Now, we are going to walk through the steps on how to connect to a DocumentDB
+We are going to walk through the steps on how to connect to a DocumentDB
 account in Power BI Desktop, navigate to a collection where we want to extract
 the data using the Navigator, and transform JSON data into tabular format using
 Power BI Desktop Query Editor.
+
+First we connect to a DocumentDB instance using the Get Data wizard:
 
 ![](media/7c72f4d62181eb4d5a1309b9f400d2e1.png)
 
 ![](media/17b5b476586ff54f8b940dcdf9cc1872.png)
 
-To get data from a DocumentDB, click on the expander at the right side of the
-**Document** column header (red mark) and see all the data, and the “Close &
+This gives us a one-column table with the documents. To get real data from DocumentDB into PowerBI, you have to click on the expander at the right side of the
+**Document** column header (red mark), and click on the “Close &
 Apply” (green mark) to build the graphs.
 
 ![](media/9dfd29d02d38945f55f973617350f19f.png)
@@ -462,42 +464,37 @@ Apply” (green mark) to build the graphs.
 
 ![](media/92618cdc6ce81da6c6b2989ae4b86750.png)
 
-[Tip] If you can’t remove the function “count” applied to each column, try “Edit
+> [Tip] If you can’t remove the function “count” applied to each column, try “Edit
 Queries” instead and change the type of the column to “number”:
 
 ![](media/6ccc566414df8353d1b0249f93fa2f68.png)
 
 ![](media/f33aa902b73d75db15e82594fb803107.png)
 
-Finally, we created a dashboard to visualize the data in some different charts,
-see the average temperature, and be able to pin the data visualizations to a
-dashboard for near real-time updates.
+Finally, we easily created a dashboard to visualize the data with some charts:
 
 ![](media/558c089b08276eacecd00ac6132c9ac9.png)
 
-AutoPilot with MachineLearning
+Tuning the AutoPilot with Machine Learning
 ------------------------------
 
-The **NMEA** *Instrumentation Bus 0183*, is a kind of control panel for the
-boat.
-
-Original Schema:
+The **NMEA** *Instrumentation Bus 0183*, is the control panel for the
+boat:
 
 ![](media/6bcded18abdc3a4db1db665d743b3f79.jpg)
 
-With this device, they have access to different data like the torsion and
+With this device, they have access to telemetry data like the torsion and
 tension of the main mast, efforts of the cables or sails, as well as the
 magnitude or frequency of waves. Not only can we get information, but we can
 also use the auto-pilot to configure sails and do all that while the boat
 continuously moves to particular direction.
 
-It will be connected via a USB port to the main PC.
+It is connected via a USB port to the main PC of the boat.
 
-The kind of bus for the data extraction is similar to the standard
-[RS485](https://en.wikipedia.org/wiki/RS-485) and the extraction will be done in
-an MQTT format.
+The bus for the data extraction is similar to the standard
+[RS485](https://en.wikipedia.org/wiki/RS-485) and the extraction will be sent to the gateway using the MQTT protocol locally.
 
-The NMEA Instrumentation Bus is a big central system totally integrated in the
+The NMEA Instrumentation Bus is a big central system totally integrated into the
 boat. It drives 3 NKE hydraulic drives and has one LG screen monitor installed
 in the master cabin.
 
@@ -510,8 +507,8 @@ boat for simulating the NMEA Instrumentation Bus of the boat.
 ![](media/b6f1fca22463dc3fef479dd6438f08ea.png)
 
 We simulated real data (of a navigation tool) with a Raspberry Pi 3 and we used
-this data for creating a Machine Learning Model, whose final objective is to
-create the Automatic Pilot of the Boat.
+this data for creating a machine learning model using AzureML, whose final objective is to
+create the automatic pilot of the boat.
 
 The simulated architecture of our model is represented in this schema:
 
@@ -520,17 +517,17 @@ called MQTT.js, available in NPM.
 
 <https://www.npmjs.com/package/mqtt>
 
-In our scenario, the Raspberry Pi 3 will be the “broker” of the MQTT
-communication and the gateway will be the client. The script hosted on the
-Rasberry PI 3 is not longer than 10 lines: read the data from our csv file with
-recopiled data, connect and publish (basic methods of library MQTT.js) that you
-can read in the simple example of the documentation:
+In our scenario, the Raspberry Pi 3 was the “broker” of the MQTT
+communication and the gateway acted as the local client. The script hosted on the
+Rasberry PI 3 is shorter than 10 lines: reads the data from one csv file with
+recopiled data, connects and publishes it. You
+can read how it works in the simple example of the documentation:
 <https://www.npmjs.com/package/mqtt>
 
-The MQTT client, in our scenario is the proxy/gateway, at the moment of the
-simulation was built in Node-Red. This step doesn’t has any difficulty. Just
-cunfigure the mqtt imput node with broker address and topic, convert the recived
-string in a JSON and analyze.
+The MQTT client, in our scenario is the proxy/gateway, during the hackfest we built a
+simulation in Node-Red. This step doesn’t has any difficulty. Just
+configure the *mqtt* imput node with the broker address and topic, convert the received
+string in a Javascript object and analyze.
 
 ![http://noderedguide.com/wp-content/uploads/2015/11/Node-RED-Lecture-3-Basic-nodes-and-flows-2.jpg](media/a9586fffdbaac27ba228acadbfbd8755.png)
 
@@ -540,30 +537,24 @@ http://noderedguide.com/wp-content/uploads/2015/11/Node-RED-Lecture-3-Basic-node
 
 Send the processed data we need to the IoT Hub
 
-![Resultado de imagen de node red ioT hub](media/b1514099e78ac5432e0cf126af09224d.png)
+![Node red ioT hub](media/b1514099e78ac5432e0cf126af09224d.png)
 
-Resultado de imagen de node red ioT hub
 
-Resultado de imagen de node red ioT hub
-
-Saving data from IoT Hub in a DocDB.
+Saving data from the Autopilot in a DocumentDB
 ------------------------------------
 
-We saved data from IoT Hub following the same steps we did in the before section
-“Using Stream Analytics to save data from IoT Hub to Document DB” [link]
-
-Using Stream Analytics, the IoT Hub like input and the DocumentDB as output.
+As we did in a previous example, we also saved data from IoT Hub to DocumentDB using Stream Analytics.
 
 ![](media/1079af5aaa8d7245b8e8a7468b0ad8be.png)
 
 Import data Into Machine Learning Studio from DocumentDB
 --------------------------------------------------------
 
-We are clear about machine learning is not a solution for every type of problem,
+Machine learning is not a solution for every kind of problem,
 but in this case we can’t determine a target value by using simple rules,
-computation o predetermined steps.
+computation or predetermined steps.
 
-Sailing techniques are complex and it cannot be adequately solved using a simple
+Sailing techniques are complex and they cannot be adequately solved using a simple
 rule-based solution. A large number of weather factors could influence in the
 sailing.
 
@@ -572,22 +563,26 @@ sailing.
 No one in our team had a extensive experience working with Machine Learning, so
 we rely on the [official Azure Machine Learning
 documentation](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-algorithm-choice)
-to choose the machine learning algorithm we used.
+to choose the between all the machine learning algorithms to find the better fit for our problem. As we need to predict a continous value (the halyard tension) from a large set of variables, it looked like a good case for a regression algorithm.
+
+So, we started with a blank experiment to play with the data and see if we could get something from it:
+
+![](media/9f125cfb80bed39d2eb2645a73ea97c7.png)
+
+### Getting the data inside Azure ML
 
 The connection from the DocumentDB where we saved our data, to our new
 experiment of machine learning is very easy to create.
-
-![](media/9f125cfb80bed39d2eb2645a73ea97c7.png)
 
 In the “Import Data” node, we can look the sucesfully imported data from
 DocumentDB and data themselves if we select “Visualize” in the contextual menu:
 
 ![](media/b6f5960bf12e609f1816dab552887af5.png)
 
-The lack of Data Scientist or a Technical Sailor expert did we could achieve a
-first approximation of the Machine Learning. Is undoubtedly a first step,
-although the confidence level of the model doesn’t allows us put in in the boat
-at the moment.
+### Building the model
+
+Even though we didn't have a Data Scientist nor a Technical Sailor expert, we could achieve a first approximation of the machine learning model. It is undoubtedly a first step,
+although the confidence level of the model doesn’t allows us put it in production by now.
 
 When we took a look about data the boat / NMEA Instrumentation Bus recollected,
 we imagine what these data meaning and their influence in the future navigation
@@ -595,7 +590,7 @@ delegate to the autopilot.
 
 Fortunately, despite of our lack of experience, the Azure Machine Learning
 Studio tool is an easy-to-use, drag-and-drop tool that allows us to create a
-POC: an easy first “Machine Learning” Model in some hours.
+POC: an easy first machine learning model in a few hours.
 
 ![](media/d9dec3f9087543a818f99e268b746e03.png)
 
@@ -621,24 +616,24 @@ Sea Level Pressure
 
 Heading (degrees)
 
-Halyard this is the result we want to calculate.
+Halyard: this is the label column we want to predict.
 
 ![](media/3e2272229ca04be4970a8e969603f9ed.png)
 
 <https://msdn.microsoft.com/library/en-us/Dn905978.aspx>
 
-We built several lineal regression algorithms to compare them:
+We tested several regression algorithms to compare them:
 
 ![](media/ad6e48d1a007f95b14e5ca0fd658df16.png)
 
-We add another aproximation method in the Linear Regression. In the first one,
+We added another aproximation method in the Linear Regression. In the first one,
 we use least squares and in the other one, gradient descent:
 
 ![](media/bf6ac20d104eea5e05fe6115283c452b.png)
 
 ![](media/e92e9fd6f62c08c5f184036d97e91895.png)
 
-We tried several regression algorithms to compare their precision:
+Then we compared the precision of both models:
 
 ![](media/3eafecddfb3de3bf27cddf461466c9b9.png)
 
