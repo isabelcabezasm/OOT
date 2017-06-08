@@ -1,0 +1,139 @@
+[
+    {
+        "id": "bfdb12.0151b4f",
+        "type": "tab",
+        "label": "Flow 1"
+    },
+    {
+        "id": "f4827683.fe2ec8",
+        "type": "MSSQL-CN",
+        "z": "",
+        "name": "RemoteSQL",
+        "server": "52.178.32.138",
+        "port": "1433",
+        "encyption": false,
+        "useUTC": true,
+        "database": "oceanofthings2"
+    },
+    {
+        "id": "b7d8eabd.c818b8",
+        "type": "MSSQL",
+        "z": "bfdb12.0151b4f",
+        "mssqlCN": "f4827683.fe2ec8",
+        "name": "Select",
+        "query": "select  * from dbo.dataSensors where sensorName = 'Cap1' OR sensorName = 'Cap2'",
+        "outField": "payload",
+        "x": 152.42855834960937,
+        "y": 286.57140350341797,
+        "wires": [
+            [
+                "ec078d71.7ac28",
+                "e87980c8.0b96"
+            ]
+        ]
+    },
+    {
+        "id": "19d7702f.8bab5",
+        "type": "inject",
+        "z": "bfdb12.0151b4f",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "x": 118.42855834960937,
+        "y": 104.57144165039062,
+        "wires": [
+            [
+                "4077f432.3ba99c"
+            ]
+        ]
+    },
+    {
+        "id": "e87980c8.0b96",
+        "type": "debug",
+        "z": "bfdb12.0151b4f",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 768.4289245605469,
+        "y": 104,
+        "wires": []
+    },
+    {
+        "id": "3a776ac8.4fa696",
+        "type": "azureiothub",
+        "z": "bfdb12.0151b4f",
+        "name": "Azure IoT Hub",
+        "protocol": "mqtt",
+        "x": 583.4290161132812,
+        "y": 360.4285888671875,
+        "wires": [
+            [
+                "e87980c8.0b96",
+                "471c5387.11738c"
+            ]
+        ]
+    },
+    {
+        "id": "ebf6f2a7.eae28",
+        "type": "json",
+        "z": "bfdb12.0151b4f",
+        "name": "",
+        "x": 370.4285583496094,
+        "y": 377.8571472167969,
+        "wires": [
+            [
+                "3a776ac8.4fa696"
+            ]
+        ]
+    },
+    {
+        "id": "ec078d71.7ac28",
+        "type": "split",
+        "z": "bfdb12.0151b4f",
+        "name": "",
+        "splt": "\\n",
+        "x": 217.42855834960937,
+        "y": 349.99999237060547,
+        "wires": [
+            [
+                "ebf6f2a7.eae28"
+            ]
+        ]
+    },
+    {
+        "id": "471c5387.11738c",
+        "type": "MSSQL",
+        "z": "bfdb12.0151b4f",
+        "mssqlCN": "f4827683.fe2ec8",
+        "name": "Update",
+        "query": "update dbo.dataSensors  set sensorName = 'Send1' where sensorName = 'Cap1' \n\nupdate dbo.dataSensors  set sensorName = 'Send2' where sensorName = 'Cap2' \n",
+        "outField": "payload",
+        "x": 796.7858581542969,
+        "y": 419.42855072021484,
+        "wires": [
+            [
+                "e87980c8.0b96"
+            ]
+        ]
+    },
+    {
+        "id": "4077f432.3ba99c",
+        "type": "is online",
+        "z": "bfdb12.0151b4f",
+        "name": "",
+        "url": "www.google.com",
+        "action": "1",
+        "x": 282.85711669921875,
+        "y": 165.4499969482422,
+        "wires": [
+            [
+                "b7d8eabd.c818b8"
+            ]
+        ]
+    }
+]
