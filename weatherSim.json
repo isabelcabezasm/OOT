@@ -1,0 +1,376 @@
+[
+    {
+        "id": "b3430093.f6bcb",
+        "type": "azureiothub",
+        "z": "9f2657ef.28b518",
+        "name": "Azure IoT Hub",
+        "protocol": "amqp",
+        "x": 779.0001831054687,
+        "y": 659.2857055664062,
+        "wires": [
+            [
+                "ca7efa7.3b86208"
+            ]
+        ]
+    },
+    {
+        "id": "89c2e42e.4ed998",
+        "type": "ui_slider",
+        "z": "9f2657ef.28b518",
+        "name": "Wind Direction",
+        "label": "Wind Direction",
+        "group": "812bde6a.b5204",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "topic": "Wind Direction",
+        "min": 0,
+        "max": "360",
+        "step": 1,
+        "x": 114.00018310546875,
+        "y": 93.71430969238281,
+        "wires": [
+            [
+                "4b4520c7.7548b",
+                "96e7b32.999f95"
+            ]
+        ]
+    },
+    {
+        "id": "82a2d29b.3d8a8",
+        "type": "inject",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "x": 193.92852401733398,
+        "y": 576.1429176330566,
+        "wires": [
+            [
+                "cc00d124.272c7"
+            ]
+        ]
+    },
+    {
+        "id": "dffe3051.33a19",
+        "type": "debug",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 893.9999847412109,
+        "y": 241.57136821746826,
+        "wires": []
+    },
+    {
+        "id": "cc00d124.272c7",
+        "type": "function",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "func": "var level1 = global.get('level1');\nvar level2 = global.get('level2');\nvar level3 = global.get('level3');\nvar level4 = global.get('level4');\nvar time = new Date();\n//msg.payload = {\"DeviceId\":\"Pipe\", \"level\": level, \"timestamp\" : time, }\n//return msg;\n\nvar msg1 = {payload:{\"DeviceId\":\"Pipe01\", \"level\": level1, \"timestamp\" : time, \"lat\": 40.418274, \"lon\" : -3.797990}};\nvar msg2 = {payload:{\"DeviceId\":\"Pipe02\", \"level\": level2, \"timestamp\" : time, \"lat\": 40.418523, \"lon\" : -3.804565}};\nvar msg3 = {payload:{\"DeviceId\":\"Pipe03\", \"level\": level3, \"timestamp\" : time, \"lat\": 40.419131, \"lon\" : -3.792798}};\nvar msg4 = {payload:{\"DeviceId\":\"Pipe04\", \"level\": level4, \"timestamp\" : time, \"lat\": 40.410599, \"lon\" : -3.798039}};\n\n\nmsg.payload=[msg1, msg2, msg3, msg4 ];\nreturn msg;",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 435.00009536743164,
+        "y": 577.7143640518188,
+        "wires": [
+            [
+                "4a473f4a.089ff"
+            ]
+        ]
+    },
+    {
+        "id": "4a473f4a.089ff",
+        "type": "json",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "x": 608.9999885559082,
+        "y": 571.5715284347534,
+        "wires": [
+            [
+                "b3430093.f6bcb",
+                "ca7efa7.3b86208"
+            ]
+        ]
+    },
+    {
+        "id": "8516081.868d1f8",
+        "type": "ui_slider",
+        "z": "9f2657ef.28b518",
+        "name": "Wind Speed",
+        "label": "Wind Speed",
+        "group": "812bde6a.b5204",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "Wind Speed",
+        "min": 0,
+        "max": "200",
+        "step": 1,
+        "x": 75,
+        "y": 231.28565883636475,
+        "wires": [
+            [
+                "5fa53986.2e3348",
+                "96e7b32.999f95"
+            ]
+        ]
+    },
+    {
+        "id": "2103bfd1.65476",
+        "type": "ui_slider",
+        "z": "9f2657ef.28b518",
+        "name": "Wave Period",
+        "label": "Wave Period",
+        "group": "754a79ac.f42ff8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "Wave Period",
+        "min": 0,
+        "max": "9",
+        "step": 1,
+        "x": 98.35705947875976,
+        "y": 292.99992179870605,
+        "wires": [
+            [
+                "1502f455.16f6dc",
+                "96e7b32.999f95"
+            ]
+        ]
+    },
+    {
+        "id": "5fa53986.2e3348",
+        "type": "ui_gauge",
+        "z": "9f2657ef.28b518",
+        "name": "Wind Speed",
+        "group": "812bde6a.b5204",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Wind Speed",
+        "label": "m/s",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "50",
+        "seg2": "100",
+        "x": 267.99995040893554,
+        "y": 209.28568935394287,
+        "wires": []
+    },
+    {
+        "id": "1502f455.16f6dc",
+        "type": "ui_gauge",
+        "z": "9f2657ef.28b518",
+        "name": "Wave Period",
+        "group": "754a79ac.f42ff8",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 296.3570556640625,
+        "y": 329,
+        "wires": []
+    },
+    {
+        "id": "6d3f6960.187b18",
+        "type": "ui_slider",
+        "z": "9f2657ef.28b518",
+        "name": "Wave Height",
+        "label": "Wave Height",
+        "group": "754a79ac.f42ff8",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "topic": "Wave Height",
+        "min": 0,
+        "max": "7",
+        "step": 1,
+        "x": 99.92849731445312,
+        "y": 455.99993896484375,
+        "wires": [
+            [
+                "96e7b32.999f95",
+                "c9fcd122.a27a2"
+            ]
+        ]
+    },
+    {
+        "id": "96e7b32.999f95",
+        "type": "function",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "func": "global.set(msg.topic,msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 487.3570671081543,
+        "y": 250.99990940093994,
+        "wires": [
+            [
+                "9f9c7553.0ba5c8"
+            ]
+        ]
+    },
+    {
+        "id": "c9fcd122.a27a2",
+        "type": "ui_gauge",
+        "z": "9f2657ef.28b518",
+        "name": "Wave Height",
+        "group": "754a79ac.f42ff8",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "",
+        "label": "m",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "7",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 308.35711669921875,
+        "y": 484.0000305175781,
+        "wires": []
+    },
+    {
+        "id": "4b4520c7.7548b",
+        "type": "ui_gauge",
+        "z": "9f2657ef.28b518",
+        "name": "WindDirection",
+        "group": "812bde6a.b5204",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "compass",
+        "title": "",
+        "label": "º",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "359",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 424.3570556640625,
+        "y": 52,
+        "wires": []
+    },
+    {
+        "id": "ca7efa7.3b86208",
+        "type": "debug",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 903.761890411377,
+        "y": 502.23805236816406,
+        "wires": []
+    },
+    {
+        "id": "9f9c7553.0ba5c8",
+        "type": "switch",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "80",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 630.0951957702637,
+        "y": 323.5713586807251,
+        "wires": [
+            [
+                "be4d59aa.490828"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "be4d59aa.490828",
+        "type": "function",
+        "z": "9f2657ef.28b518",
+        "name": "",
+        "func": "msg.payload={data:'Alert'};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 790.0951805114746,
+        "y": 335.5713472366333,
+        "wires": [
+            [
+                "4a473f4a.089ff",
+                "dffe3051.33a19"
+            ]
+        ]
+    },
+    {
+        "id": "812bde6a.b5204",
+        "type": "ui_group",
+        "z": "",
+        "name": "Wind",
+        "tab": "1979d98.b531327",
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "754a79ac.f42ff8",
+        "type": "ui_group",
+        "z": "",
+        "name": "Wave",
+        "tab": "1979d98.b531327",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "1979d98.b531327",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Weather",
+        "icon": "dashboard"
+    }
+]
