@@ -1,0 +1,6 @@
+[{"id":"8516081.868d1f8","type":"ui_slider","z":"9f2657ef.28b518","name":"Wind Speed",
+"label":"Wind Speed","group":"812bde6a.b5204","order":4,"width":0,"height":0,"passthru":true,
+"topic":"Wind Speed","min":0,"max":"200","step":1,"x":75,"y":231.28565883636475,
+"wires":[["5fa53986.2e3348","96e7b32.999f95"]]},
+{"id":"812bde6a.b5204","type":"ui_group","z":"","name":"Wind","tab":"1979d98.b531327","disp":true,"width":"6"},
+{"id":"1979d98.b531327","type":"ui_tab","z":"","name":"Weather","icon":"dashboard"}]
